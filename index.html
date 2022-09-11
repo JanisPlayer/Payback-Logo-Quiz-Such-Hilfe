@@ -169,24 +169,37 @@
   </script>
 
   <script>
+    var jf = new XMLHttpRequest();
+    jf.open("GET", "https://heldendesbildschirms.de/payback/getloyaltypartner.json", false);
+    jf.send(null)
+    const getloyaltypartner = JSON.parse(jf.response).partners;
+
     document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("payback_suche_input_zahlen").value = "4";
+      document.getElementById("payback_suche_input_buchstaben").value = "otto";
       document.getElementById('payback_suche_summit').addEventListener('click', selectOption);
+      document.getElementById('payback_suche_input_buchstaben').addEventListener('keypress', liveselectOption);
     });
+
     function selectOption() {
-      listload(0)
+      listload(0, 0, 1, 1)
+    }
+
+    function liveselectOption() {
+      if (livesuche_checkbox.checked == true) {
+        listload(0, 1, 1, 0)
+      }
     }
 
 
     let modeselectet = ["vanityName", "displayName"];
-    function listload(mode) {
+
+    function listload(mode, livesearch, length, buchstabentrue) {
 
       var buchstaben = document.getElementById("payback_suche_input_buchstaben").value;
       //alert(buchstaben.substr(0, 1));
       var länge = document.getElementById("payback_suche_input_zahlen").value;
-      var jf = new XMLHttpRequest();
-      jf.open("GET", "https://heldendesbildschirms.de/payback/getloyaltypartner.json", false);
-      jf.send(null)
-      const getloyaltypartner = JSON.parse(jf.response).partners;
+
       const logo = 0;
       var sortpos = 0;
 
@@ -195,28 +208,65 @@
       for (var i = 0; i < Object.keys(getloyaltypartner).length; i++) {
         //if (getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName.length == länge) {
         //  let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName;
-        if (getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim().length == länge) {
+        let tempname = getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim();
+        if (length == 0 || getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim().length == länge) {
           let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim();
-          var punkte = 0;
-          for (var ai = 0; ai < buchstaben.length; ai++) {
-            //if (getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName.includes(buchstaben.substr(ai, 1))) {
-            if (temp.toUpperCase().indexOf(buchstaben.substr(ai, 1).toUpperCase()) > -1) {
-            //if (temp.toUpperCase().includes(buchstaben.substr(ai, 1)).toUpperCase()) {
-              temp = temp.replace(buchstaben.substr(ai, 1), "")
-              //logo[ai] = i;
-              punkte = punkte + 1;
-              NameFund = 1;
-            }
+
+
+          var schnitt = temp.length/2;
+          //punkte = schnitt;
+          if (anfangsuche_checkbox.checked == true) {
+            temp = temp.substr(schnitt,schnitt);
+            document.getElementById("livelogollist").innerHTML = temp;
           }
-          if (punkte >= länge) { //dlrrläaspvyyrsyrpvzvm 6 tsepvüverbrnßfröealtwtsepvüverbrnßfröealtw 10
-            logo[sortpos] = punkte;
-            createLogoList(i, getloyaltypartner, punkte, mode);
+          if (mittesuche_checkbox.checked == true) {
+            temp = temp.substr(0,schnitt);
+            //punkte = punkte=schnitt*2;
+            document.getElementById("livelogollist").innerHTML = temp;
+          }
+
+          if (endesuche_checkbox.checked == true) {
+            temp = temp.substr(schnitt,temp.length);
+            document.getElementById("livelogollist").innerHTML = temp;
+          }
+
+          var punkte = 0;
+          var lastpunkte = 0;
+
+          if (buchstabentrue == 0) {
+                createLogoList(i, getloyaltypartner, punkte, mode);
+          } else {
+            //for (var ai = 0; ai < temp.length; ai++) {
+            for (var ai = 0; ai < buchstaben.length; ai++) {
+              //if (getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName.includes(buchstaben.substr(ai, 1))) {
+              if (temp.toUpperCase().indexOf(buchstaben.substr(ai, 1).toUpperCase()) > -1) {
+                //if (temp.toUpperCase().includes(buchstaben.substr(ai, 1)).toUpperCase()) {
+                temp = temp.replace(buchstaben.substr(ai, 1), "")
+                //logo[ai] = i;
+                punkte = punkte + 1;
+                NameFund = NameFund + 1;
+              }
+            }
+            //dlrrläaspvyyrsyrpvzvm 6 tsepvüverbrnßfröealtwtsepvüverbrnßfröealtw 10
+            if (punkte >= länge || ((punkte >= buchstaben.length) && egalwo_checkbox.checked)) { //egal wo positon.
+              //if (punkte >= länge) {
+              logo[sortpos] = punkte;
+              if (livesearch == true) {
+                if (punkte >= lastpunkte) {
+                  if (NameFund >= länge) {
+                    document.getElementById("livelogollist").innerHTML = tempname;
+                  }
+                }
+              } else {
+                createLogoList(i, getloyaltypartner, punkte, mode);
+              }
+            }
           }
         }
       }
 
-      if (NameFund == 0 && mode == 0)  {
-          listload(1);
+      if (NameFund == 0 && mode == 0) {
+        listload(1, livesearch, length, buchstabentrue);
       }
 
       //createLogoList("https://www.payback.de/resources/json/getloyaltypartner?size=1000&offset=0", "");
@@ -418,9 +468,28 @@
               <div id="file_list">
               </div>
             </description>
+            <div id="livelogollist">
+            </div>
             <input type="text" value="" placeholder="Buchstaben" id="payback_suche_input_buchstaben" class="payback_suche_input_buchstaben">
             <input type="text" value="" placeholder="Länge" id="payback_suche_input_zahlen" class="payback_suche_input_zahlen">
             <button id="payback_suche_summit" class="">suchen</button>
+
+
+            <description>
+              Sonstige Optionen:
+              <br><label for="myCheck">Livesuche:</label>
+              <input type="checkbox" id="livesuche_checkbox" style="width: auto;">
+              <br><label for="myCheck">Ist eine Positon ist bekannt?</label>
+              <br>
+              <input type="checkbox" id="anfangsuche_checkbox" style="width: 25%;">
+              <input type="checkbox" id="mittesuche_checkbox" style="width: 25%;">
+              <input type="checkbox" id="endesuche_checkbox" style="width: 25%;">
+              <br>
+              <label for="myCheck">Sind Buchstaben und länge bekannt (egal wo):</label>
+              <input type="checkbox" id="egalwo_checkbox" style="width: auto;"><br>
+              <br><label for="myCheck">Buchstaben ignorieren:</label>
+              <input type="checkbox" id="buchstaben_checkbox" style="width: auto;">
+            </description>
             <div class="logollist">
               Gefunden: <br>
             </div>
@@ -429,63 +498,72 @@
           <!-- </box> -->
         </div>
 
-<div class="werbung">
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B07FCMKK5X&asins=B07FCMKK5X&linkId=f563fc0fd132305d0a6d7e1a2cb6e31c&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
-    </iframe>
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B08GYKNCCP&asins=B08GYKNCCP&linkId=0173a9cbda143dabd7158581f6086d08&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
-    </iframe>
-<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08GVDNTGJ&asins=B08GVDNTGJ&linkId=69d02f5ddd18df8dea428ab3101e1b6d&show_border=false&link_opens_in_new_window=true"></iframe>
-<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08QJHLC8J&asins=B08QJHLC8J&linkId=94c939aef19537e6362cdd2ccdb185e8&show_border=false&link_opens_in_new_window=true"></iframe>
-<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B0924W1CV5&asins=B0924W1CV5&linkId=62ed2c94241ddbe099bcfe2ae3e1ec59&show_border=false&link_opens_in_new_window=true"></iframe>
-<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B09QWH3T52&asins=B09QWH3T52&linkId=d241274730ec06da2426bd407ebc4c1e&show_border=false&link_opens_in_new_window=true"></iframe>
-<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B01C0EF2OC&asins=B01C0EF2OC&linkId=c055524d5299430ffd5d07a4591c4ae1&show_border=false&link_opens_in_new_window=true"></iframe>
-<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07PHPXHQS&asins=B07PHPXHQS&linkId=891fbb8ae7beace0e315105660387054&show_border=false&link_opens_in_new_window=true"></iframe>
-<iframe src="https://rcm-eu.amazon-adsystem.com/e/cm?o=3&p=12&l=ur1&category=pw&banner=1RWHE2Q7M2AQ18P32H02&f=ifr&linkID=be6e19476942c4c3af4a16c8ca9bf731&t=heldendesb0c1-21&tracking_id=heldendesb0c1-21" width="300" height="250" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
-<br><br>
-Als Amazon-Partner verdiene ich an qualifizierten Verkäufen
-</div>
+        <div class="werbung">
+          <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B07FCMKK5X&asins=B07FCMKK5X&linkId=f563fc0fd132305d0a6d7e1a2cb6e31c&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
+          </iframe>
+          <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B08GYKNCCP&asins=B08GYKNCCP&linkId=0173a9cbda143dabd7158581f6086d08&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
+          </iframe>
+          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08GVDNTGJ&asins=B08GVDNTGJ&linkId=69d02f5ddd18df8dea428ab3101e1b6d&show_border=false&link_opens_in_new_window=true"></iframe>
+          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08QJHLC8J&asins=B08QJHLC8J&linkId=94c939aef19537e6362cdd2ccdb185e8&show_border=false&link_opens_in_new_window=true"></iframe>
+          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B0924W1CV5&asins=B0924W1CV5&linkId=62ed2c94241ddbe099bcfe2ae3e1ec59&show_border=false&link_opens_in_new_window=true"></iframe>
+          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B09QWH3T52&asins=B09QWH3T52&linkId=d241274730ec06da2426bd407ebc4c1e&show_border=false&link_opens_in_new_window=true"></iframe>
+          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B01C0EF2OC&asins=B01C0EF2OC&linkId=c055524d5299430ffd5d07a4591c4ae1&show_border=false&link_opens_in_new_window=true"></iframe>
+          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07PHPXHQS&asins=B07PHPXHQS&linkId=891fbb8ae7beace0e315105660387054&show_border=false&link_opens_in_new_window=true"></iframe>
+          <iframe src="https://rcm-eu.amazon-adsystem.com/e/cm?o=3&p=12&l=ur1&category=pw&banner=1RWHE2Q7M2AQ18P32H02&f=ifr&linkID=be6e19476942c4c3af4a16c8ca9bf731&t=heldendesb0c1-21&tracking_id=heldendesb0c1-21" width="300" height="250"
+            scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
+          <br><br>
+          Als Amazon-Partner verdiene ich an qualifizierten Verkäufen
+        </div>
 
-      </a>
+        </a>
 
-      </box>
+        </box>
 
-      <script>
-        function copy(txt) {
-          var copyText = document.getElementById(txt);
-          copyText.select();
-          copyText.setSelectionRange(0, 99999)
-          document.execCommand("copy");
-          /*const content_box = document.getElementsByTagName("footer")[0];
-          const meldung = document.createElement("textarea");
-          meldung.value = ("Copied the text: " + copyText.value);
-          meldung.style = "font-size: 150%; position: absolute; bottom 0px;";
-          content_box.appendChild(meldung);
-          meldung.select()
-          //meldung.remove()
-          setTimeout(document.getElementsByTagName("textarea").remove(), 1000);*/
-        }
-      </script>
+        <script>
+          function copy(txt) {
+            var copyText = document.getElementById(txt);
+            copyText.select();
+            copyText.setSelectionRange(0, 99999)
+            document.execCommand("copy");
+            /*const content_box = document.getElementsByTagName("footer")[0];
+            const meldung = document.createElement("textarea");
+            meldung.value = ("Copied the text: " + copyText.value);
+            meldung.style = "font-size: 150%; position: absolute; bottom 0px;";
+            content_box.appendChild(meldung);
+            meldung.select()
+            //meldung.remove()
+            setTimeout(document.getElementsByTagName("textarea").remove(), 1000);*/
+          }
+        </script>
 
-      <!--<div id="werbung">
+        <!--<div id="werbung">
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesbild-21&marketplace=amazon&region=DE&placement=B07WFQQLBG&asins=B07WFQQLBG&linkId=8841e2dc7d055c4469d0eaf3233e1d2b&show_border=false&link_opens_in_new_window=false&price_color=333333&title_color=0066c0&bg_color=ffffff">
     </iframe>
 
 <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesbild-21&marketplace=amazon&region=DE&placement=B07PVCVBN7&asins=B07PVCVBN7&linkId=19eb6fd6268585cc196290d07813cf3a&show_border=false&link_opens_in_new_window=false&price_color=333333&title_color=0066c0&bg_color=ffffff">
     </iframe>
 </div>-->
-      
-	<div id="werbung_google">
-        <!--Adsense wird demnächst möglicherweise entfernt, da Google eine zu schlechte Kommunikation hat, also nicht erreichbar ist. <br>
+
+        <div id="werbung_google">
+          <!--Adsense wird demnächst möglicherweise entfernt, da Google eine zu schlechte Kommunikation hat, also nicht erreichbar ist. <br>
 	<img src="/img/AdSense_Defekt.jpg" alt="Fehler" style="width:50%;"> <br>
 	Vielleicht kann ein Google Mitarbeiter der berrechtigt ist, sich diesem Problem annehmen. <br>
 	Mehr zu diesem Fall unter: Google-Kundenservice: Referenznummer [1-2656000033319], Kontaktversuch von meinen privaten Account, leider kann der Google One Support nicht mit AdSense komonizieren.-->
 
-        <!-- Adblock -->
-        <ins class="adsbygoogle" style="display:block; text-align:center; margin-top: 1%;" data-ad-client="ca-pub-5350651163680266" data-ad-slot="9833970873" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </div>
+          <!-- Adblock -->
+          <ins class="adsbygoogle" style="display:block; text-align:center; margin-top: 1%;" data-ad-client="ca-pub-5350651163680266" data-ad-slot="9833970873" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
     </content_box>
   </div>
 </body>
