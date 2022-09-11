@@ -1,0 +1,504 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="de">
+
+<head>
+  <title>Helden des Bildschirms | Payback Logo Quiz Such-Hilfe</title>
+
+  <meta charset="utf-8">
+
+  <meta name="description" content=Die Payback Logo Quiz Such-Hilfe benötigt nur die Länge und die Buchstaben um die möglichen Logos ausfindig zu machen.">
+
+  <meta property="og:image" content="/icon/android-icon-192x192.png" />
+
+  <meta name="keywords" content="payback,logo, logos, quiz, gewinnspiel, such, suche, hilfe, lösung">
+
+  <meta name="author" content="Janis">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+
+  <link rel="stylesheet" href="index.css">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/icon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/icon/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/icon/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/icon/apple-/icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/icon/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icon/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/icon/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icon/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icon/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon-16x16.png">
+  <link rel="manifest" href="/icon/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="theme-color" content="#0033CC" />
+  <style type="text/css">
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/steem/dist/steem.min.js"></script>
+  <script>
+    //function createArtikelPage();
+
+    document.addEventListener("DOMContentLoaded", () => {});
+
+    function createArtikelPage() {
+      var author = "janisplayer";
+      steem.api.getBlogEntries(author, 0, 4, function(err, data) {
+        for (var i = 0; i < 74; i++) {
+          if (data[i]["author"] == author) {
+            createArtikel(author, data[i]["permlink"], i);
+          }
+        }
+      });
+    }
+
+    function createArtikel(author, permlink, nummer) {
+      const br = document.createElement("br");
+      const title = document.createElement("a");
+      const date = document.createElement("datum");
+      const content_box = document.getElementsByClassName("lastartikellist")[0];
+
+      const artikel = document.createElement("artikel");
+      steem.api.getContent(author, permlink, function(err, result) {
+        title.innerText = result["title"];
+        title.href = "https://heldendesbildschirms.de/artikel/generator.php?artikel=" + permlink;
+        //title.innerHTML = title.innerHTML + "<br>";
+        date.innerText = result["created"];
+      });
+      title.style = "font-size: 100%;";
+      date.style = "font-size: 50%;";
+      content_box.appendChild(artikel);
+      artikel.appendChild(title);
+      artikel.appendChild(date);
+      artikel.appendChild(br);
+    }
+
+    function createArtikelPage_steamworld_api() {
+      var jf = new XMLHttpRequest();
+      jf.open("GET", "https://heldendesbildschirms.de/artikel/templates/PostsByAuthor.json", false);
+      jf.send(null)
+      const jf_PBA = JSON.parse(jf.response).inhalt;
+      const cols = JSON.parse(jf_PBA).result.cols;
+      const rows = JSON.parse(jf_PBA).result.rows;
+
+      //jf.open("GET", "https://sds.steemworld.org/feeds_api/getPostsByAuthor/janisplayer", false);
+      //jf.send(null)
+
+      //const cols = JSON.parse(jf.response).result.cols;
+      //const rows = JSON.parse(jf.response).result.rows;
+
+      console.log(cols.author);
+
+      var author = "janisplayer";
+      for (var i = 0; i < 4; i++) {
+        if (rows[i][cols.author] == author) {
+          createArtikel_steamworld_api(i, rows, cols);
+        }
+      }
+    }
+
+    /*function createArtikel_steamworld_api(i, rows, cols) {
+      const br = document.createElement("br");
+      const title = document.createElement("a");
+      const date = document.createElement("datum");
+      const content_box = document.getElementsByClassName("lastartikellist")[0];
+
+      const artikel = document.createElement("artikel");
+
+      title.innerText = rows[i][cols.title];
+      title.href = "https://heldendesbildschirms.de/artikel/?artikel=" + rows[i][cols.permlink];
+      //title.innerHTML = title.innerHTML + "<br>";
+      date.innerText = new Date(rows[i][cols.created] * 1000);
+
+      title.style = "font-size: 100%;";
+      date.style = "font-size: 50%;";
+      content_box.appendChild(artikel);
+      artikel.appendChild(title);
+      artikel.appendChild(date);
+      artikel.appendChild(br);
+    }*/
+
+    function createArtikel_steamworld_api(i, rows, cols) {
+      const br = document.createElement("br");
+      const imgcontainer = document.createElement("imgcontainer");
+      const picture = document.createElement("picture");
+      const imgcontainera = document.createElement("a");
+      const title = document.createElement("a");
+      const img = document.createElement("img");
+
+      const date = document.createElement("datum");
+      const content_box = document.getElementsByClassName("lastartikellist")[0];
+
+      const artikel = document.createElement("artikel");
+
+      if (JSON.parse(rows[i][cols.json_metadata]).image != null && JSON.parse(rows[i][cols.json_metadata]).image[0] != undefined) {
+        /*img.src = JSON.parse(rows[i][cols.json_metadata]).image[0];
+        imgcontainera.href = "?artikel=" + rows[i][cols.permlink];
+        img.style = "max-width:100%; height:auto; display: inline-block; vertical-align: middle;";
+        img.style = "width: 100%; height: 180px; object-fit: cover;";*/
+        img.src = "/artikel/" + rows[i][cols.permlink] + "/img/preview.jpg";
+        imgcontainera.href = "/artikel/?artikel=" + rows[i][cols.permlink];
+        img.style = "max-width:100%; height:auto; display: inline-block; vertical-align: middle;";
+        //img.style = "width: 100%; height: 180px; object-fit: cover;";
+      } else {
+        img.src = "/artikel/404.jpg";
+        imgcontainera.href = "/artikel/?artikel=" + rows[i][cols.permlink];
+        img.style = "width: 100%; height: 180px; object-fit: cover;";
+      }
+
+      title.innerText = rows[i][cols.title];
+      title.href = "/artikel/?artikel=" + rows[i][cols.permlink];
+      var dt = new Date(rows[i][cols.created] * 1000);
+      date.innerText = dt.getDate() + "." + (dt.getMonth() + 1) + "." + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes();
+
+      content_box.appendChild(artikel);
+      artikel.appendChild(imgcontainera);
+      imgcontainer.style = "width:100%; overflow: hidden; display: inline-block; position: relative;";
+      imgcontainera.appendChild(imgcontainer);
+      imgcontainer.appendChild(picture);
+      if (img.src != null) {
+        picture.appendChild(img);
+        imgcontainer.appendChild(br);
+      }
+      artikel.appendChild(title);
+      artikel.appendChild(date);
+    }
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById('payback_suche_summit').addEventListener('click', selectOption);
+    });
+    function selectOption() {
+      listload(0)
+    }
+
+
+    let modeselectet = ["vanityName", "displayName"];
+    function listload(mode) {
+
+      var buchstaben = document.getElementById("payback_suche_input_buchstaben").value;
+      //alert(buchstaben.substr(0, 1));
+      var länge = document.getElementById("payback_suche_input_zahlen").value;
+      var jf = new XMLHttpRequest();
+      jf.open("GET", "https://heldendesbildschirms.de/payback/getloyaltypartner.json", false);
+      jf.send(null)
+      const getloyaltypartner = JSON.parse(jf.response).partners;
+      const logo = 0;
+      var sortpos = 0;
+
+      var NameFund = 0;
+
+      for (var i = 0; i < Object.keys(getloyaltypartner).length; i++) {
+        //if (getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName.length == länge) {
+        //  let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName;
+        if (getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim().length == länge) {
+          let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim();
+          var punkte = 0;
+          for (var ai = 0; ai < buchstaben.length; ai++) {
+            //if (getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName.includes(buchstaben.substr(ai, 1))) {
+            if (temp.toUpperCase().indexOf(buchstaben.substr(ai, 1).toUpperCase()) > -1) {
+            //if (temp.toUpperCase().includes(buchstaben.substr(ai, 1)).toUpperCase()) {
+              temp = temp.replace(buchstaben.substr(ai, 1), "")
+              //logo[ai] = i;
+              punkte = punkte + 1;
+              NameFund = 1;
+            }
+          }
+          if (punkte >= länge) { //dlrrläaspvyyrsyrpvzvm 6 tsepvüverbrnßfröealtwtsepvüverbrnßfröealtw 10
+            logo[sortpos] = punkte;
+            createLogoList(i, getloyaltypartner, punkte, mode);
+          }
+        }
+      }
+
+      if (NameFund == 0 && mode == 0)  {
+          listload(1);
+      }
+
+      //createLogoList("https://www.payback.de/resources/json/getloyaltypartner?size=1000&offset=0", "");
+    }
+    async function createLogoList(readobject, getloyaltypartner, punkte, mode) {
+      const br = document.createElement("br");
+      const title = document.createElement("a");
+      const content_box = document.getElementsByClassName("logollist")[0];
+      const imgcontainer = document.createElement("imgcontainer");
+      const checkbox = document.createElement("INPUT");
+      const button = document.createElement("button");
+      const picture = document.createElement("picture");
+      const imgcontainera = document.createElement("a");
+      const img = document.createElement("img");
+      const artikel = document.createElement("artikel");
+
+      //(Object.keys(getloyaltypartner)[2])
+      //title.innerText = getloyaltypartner[(Object.keys(getloyaltypartner)[readobject])].vanityName.toUpperCase() + " Punkte: " + punkte;
+      title.innerText = getloyaltypartner[(Object.keys(getloyaltypartner)[readobject])][(modeselectet[mode])].toUpperCase() + " Punkte: " + punkte;
+      title.href = 0;
+      title.style = "font-size: 100%;";
+
+      if (getloyaltypartner[(Object.keys(getloyaltypartner)[readobject])].detailsLogoUrl != null && getloyaltypartner[(Object.keys(getloyaltypartner)[readobject])].detailsLogoUrl != undefined) {
+        /*img.src = JSON.parse(rows[i][cols.json_metadata]).image[0];
+        imgcontainera.href = "?artikel=" + rows[i][cols.permlink];
+        img.style = "max-width:100%; height:auto; display: inline-block; vertical-align: middle;";
+        img.style = "width: 100%; height: 180px; object-fit: cover;";*/
+        img.src = getloyaltypartner[(Object.keys(getloyaltypartner)[readobject])].detailsLogoUrl;
+        imgcontainera.href = 0;
+        img.style = "max-width:100%; height:auto; display: inline-block; vertical-align: middle;";
+        //img.style = "width: 100%; height: 180px; object-fit: cover;";
+      } else {
+        img.src = getloyaltypartner[(Object.keys(getloyaltypartner)[readobject])].detailsLogoUrl;
+        imgcontainera.href = 0;
+        img.style = "width: 100%; height: 180px; object-fit: cover;";
+      }
+      artikel.appendChild(imgcontainera);
+      imgcontainer.style = "width:100%; overflow: hidden; display: inline-block; position: relative;";
+      imgcontainera.appendChild(imgcontainer);
+      checkbox.innerText = "Lösung? (kommt vielleicht noch)"
+      checkbox.setAttribute("type", "checkbox");
+      //imgcontainer.appendChild(checkbox);
+      button.innerText = "Löschen (kommt vielleicht noch)"
+      button.style = "width:100%;";
+      button.onclick = function() {
+        createArtikelContent(author, permlink);
+      };
+      //imgcontainer.appendChild(button);
+      imgcontainer.appendChild(picture);
+      if (img.src != null) {
+        picture.appendChild(img);
+        imgcontainer.appendChild(br);
+      }
+      content_box.appendChild(artikel);
+      artikel.appendChild(title);
+      artikel.appendChild(br);
+    }
+  </script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-176121451-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-176121451-1', {
+      'anonymize_ip': true
+    });
+  </script>
+
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-K73ZCBF');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5350651163680266" crossorigin="anonymous"></script>
+
+  <script>
+    addEventListener('DOMContentLoaded', (event) => {
+      document.getElementById('suche_summit').addEventListener('click', suche);
+
+      document.getElementById('suche_input').onkeydown = function(e) {
+        if (e.keyCode == 13) {
+          suche();
+        }
+      };
+    });
+
+    function suche() {
+      var suche_text = document.getElementById('suche_input').value
+      document.getElementById('suche_input').value = "";
+      document.location = ("https://cse.google.com/cse?cx=7718be5d5ddc85d34&q=" + suche_text);
+    }
+  </script>
+
+</head>
+
+<body>
+
+
+  <div id="wrapper" style="
+    min-height: calc(100vh - 98px);
+    ">
+    <div class="head">
+      <img src="/img/logo.png" alt="Logo von @Zauberah erstellt." style="width:64px;height:51px;">
+      <a href="/">Helden des Bildschirms</a>
+    </div>
+
+    <div class="over_nav">
+      <a href="/minecraft">Minecraft Server</a>
+      <a href="/artikel">Blog</a>
+      <a href="/download">Download Server</a>
+      <!-- <a href="#minecraft">Minecraft Server</a>
+      <a href="#blog">Blog</a>
+      <a href="#such_hilfe">Download Server</a> -->
+      <a href="/#voiceserver">Voiceserver</a>
+      <a href="/#spenden">Spenden</a>
+      <a href="/#twitch-embed">Twitch</a>
+      <div class="suchen" style="float:right">
+        <input type="text" value="" id="suche_input" class="suche"><button id="suche_summit" class="suche">suchen</button>
+      </div>
+    </div>
+    </head>
+    <content_box>
+
+      <script>
+        function dateiauswahl(evt) {
+          var dateien = evt.target.files; // FileList object
+
+          // Auslesen der gespeicherten Dateien durch Schleife
+          for (var i = 0, f; f = dateien[i]; i++) {
+
+            // nur Bild-Dateien
+            if (!f.type.match('image.*')) {
+              continue;
+            }
+
+            var reader = new FileReader();
+
+            reader.onload = (function(theFile) {
+              return function(e) {
+                // erzeuge Thumbnails.
+                var vorschau = document.createElement('img');
+                vorschau.className = 'thumb';
+                vorschau.src = e.target.result;
+                vorschau.style = "width: 100%; height: auto";
+                vorschau.title = theFile.name;
+                document.getElementById('file_list').insertBefore(vorschau, null);
+              };
+            })(f);
+
+            // Bilder als Data URL auslesen.
+            reader.readAsDataURL(f);
+          }
+        }
+        // Auf neue Auswahl reagieren und gegebenenfalls Funktion dateiauswahl neu ausführen.
+
+        document.addEventListener("DOMContentLoaded", () => {
+          document.getElementById('myFile').addEventListener('change', dateiauswahl, false);
+        });
+      </script>
+
+      <div class="default_text">
+        <box>
+          <h1>Etwas Hilfe muss sein.<br> </h1>
+        </box>
+      </div>
+
+      <div class="nav">
+        <div id="server_box_left" style="display: inline-block; color: rgba(255, 255, 255, 1.0); text-align: center;">
+          <!-- <box> -->
+
+          <div id="such_hilfe" style="display: inline-block; background-color: rgba(0, 0, 255, 0.5); margin-top: 10px;">
+            <!-- <box> -->
+            <description>
+              Einfach Buchstaben und Länge eintragen:
+            </description>
+            <description>
+              Screenshot auswählen um die nutzung auf dem Smartphone zu erleichtern.
+              <input type="file" id="myFile">
+              <div id="file_list">
+              </div>
+            </description>
+            <input type="text" value="" placeholder="Buchstaben" id="payback_suche_input_buchstaben" class="payback_suche_input_buchstaben">
+            <input type="text" value="" placeholder="Länge" id="payback_suche_input_zahlen" class="payback_suche_input_zahlen">
+            <button id="payback_suche_summit" class="">suchen</button>
+            <div class="logollist">
+              Gefunden: <br>
+            </div>
+            <!-- </box> -->
+          </div>
+          <!-- </box> -->
+        </div>
+
+<div class="werbung">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B07FCMKK5X&asins=B07FCMKK5X&linkId=f563fc0fd132305d0a6d7e1a2cb6e31c&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
+    </iframe>
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B08GYKNCCP&asins=B08GYKNCCP&linkId=0173a9cbda143dabd7158581f6086d08&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
+    </iframe>
+<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08GVDNTGJ&asins=B08GVDNTGJ&linkId=69d02f5ddd18df8dea428ab3101e1b6d&show_border=false&link_opens_in_new_window=true"></iframe>
+<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08QJHLC8J&asins=B08QJHLC8J&linkId=94c939aef19537e6362cdd2ccdb185e8&show_border=false&link_opens_in_new_window=true"></iframe>
+<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B0924W1CV5&asins=B0924W1CV5&linkId=62ed2c94241ddbe099bcfe2ae3e1ec59&show_border=false&link_opens_in_new_window=true"></iframe>
+<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B09QWH3T52&asins=B09QWH3T52&linkId=d241274730ec06da2426bd407ebc4c1e&show_border=false&link_opens_in_new_window=true"></iframe>
+<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B01C0EF2OC&asins=B01C0EF2OC&linkId=c055524d5299430ffd5d07a4591c4ae1&show_border=false&link_opens_in_new_window=true"></iframe>
+<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07PHPXHQS&asins=B07PHPXHQS&linkId=891fbb8ae7beace0e315105660387054&show_border=false&link_opens_in_new_window=true"></iframe>
+<iframe src="https://rcm-eu.amazon-adsystem.com/e/cm?o=3&p=12&l=ur1&category=pw&banner=1RWHE2Q7M2AQ18P32H02&f=ifr&linkID=be6e19476942c4c3af4a16c8ca9bf731&t=heldendesb0c1-21&tracking_id=heldendesb0c1-21" width="300" height="250" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
+<br><br>
+Als Amazon-Partner verdiene ich an qualifizierten Verkäufen
+</div>
+
+      </a>
+
+      </box>
+
+      <script>
+        function copy(txt) {
+          var copyText = document.getElementById(txt);
+          copyText.select();
+          copyText.setSelectionRange(0, 99999)
+          document.execCommand("copy");
+          /*const content_box = document.getElementsByTagName("footer")[0];
+          const meldung = document.createElement("textarea");
+          meldung.value = ("Copied the text: " + copyText.value);
+          meldung.style = "font-size: 150%; position: absolute; bottom 0px;";
+          content_box.appendChild(meldung);
+          meldung.select()
+          //meldung.remove()
+          setTimeout(document.getElementsByTagName("textarea").remove(), 1000);*/
+        }
+      </script>
+
+      <!--<div id="werbung">
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesbild-21&marketplace=amazon&region=DE&placement=B07WFQQLBG&asins=B07WFQQLBG&linkId=8841e2dc7d055c4469d0eaf3233e1d2b&show_border=false&link_opens_in_new_window=false&price_color=333333&title_color=0066c0&bg_color=ffffff">
+    </iframe>
+
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesbild-21&marketplace=amazon&region=DE&placement=B07PVCVBN7&asins=B07PVCVBN7&linkId=19eb6fd6268585cc196290d07813cf3a&show_border=false&link_opens_in_new_window=false&price_color=333333&title_color=0066c0&bg_color=ffffff">
+    </iframe>
+</div>-->
+      
+	<div id="werbung_google">
+        <!--Adsense wird demnächst möglicherweise entfernt, da Google eine zu schlechte Kommunikation hat, also nicht erreichbar ist. <br>
+	<img src="/img/AdSense_Defekt.jpg" alt="Fehler" style="width:50%;"> <br>
+	Vielleicht kann ein Google Mitarbeiter der berrechtigt ist, sich diesem Problem annehmen. <br>
+	Mehr zu diesem Fall unter: Google-Kundenservice: Referenznummer [1-2656000033319], Kontaktversuch von meinen privaten Account, leider kann der Google One Support nicht mit AdSense komonizieren.-->
+
+        <!-- Adblock -->
+        <ins class="adsbygoogle" style="display:block; text-align:center; margin-top: 1%;" data-ad-client="ca-pub-5350651163680266" data-ad-slot="9833970873" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </content_box>
+  </div>
+</body>
+
+<footer>
+  <text>
+    <ul>
+      <!-- <li>&copy; 2019 Helden des Bildschirms</li> -->
+      <li><a href="mailto:support@heldendesbildschirms.de">Kontakt</a></li>
+      <li><a href="/datenschutz.html">Datenschutz</a></li>
+      <li><a href="/impressum.html">Impressum</a></li>
+    </ul>
+  </text>
+</footer>
+
+</html>
