@@ -182,12 +182,16 @@
     });
 
     function selectOption() {
-      listload(0, 0, 1, 1)
+      if (buchstaben_checkbox.checked == true) {
+        listload(0, 0, 1, 0);
+      } else {
+        listload(0, 0, 1, 1);
+      }
     }
 
     function liveselectOption() {
       if (livesuche_checkbox.checked == true) {
-        listload(0, 1, 1, 0)
+        listload(0, 1, 1, 1);
       }
     }
 
@@ -253,8 +257,10 @@
               logo[sortpos] = punkte;
               if (livesearch == true) {
                 if (punkte >= lastpunkte) {
-                  if (NameFund >= länge) {
+                  if (NameFund >= länge) { //Fehler (NameFund == 1)
                     document.getElementById("livelogollist").innerHTML = tempname;
+                  } else {
+                    document.getElementById("livelogollist").innerHTML = document.getElementById("livelogollist").innerHTML + " " + tempname;
                   }
                 }
               } else {
@@ -477,18 +483,18 @@
 
             <description>
               Sonstige Optionen:
-              <br><label for="myCheck">Livesuche:</label>
+              <br><label for="myCheck">Livesuche(Treffer Vorschau) länge muss bekannt sein:</label>
               <input type="checkbox" id="livesuche_checkbox" style="width: auto;">
-              <br><label for="myCheck">Ist eine Positon ist bekannt?</label>
+              <br><label for="myCheck">Buchstaben ignorieren:</label>
+              <input type="checkbox" id="buchstaben_checkbox" style="width: auto;">
+              <br>
+              <label for="myCheck">Sind Buchstaben und länge bekannt (egal wo):</label>
+              <input type="checkbox" id="egalwo_checkbox" style="width: auto;"><br>
+              <br><label for="myCheck">Ist eine Positon ist bekannt? (in arbeit dont work)</label>
               <br>
               <input type="checkbox" id="anfangsuche_checkbox" style="width: 25%;">
               <input type="checkbox" id="mittesuche_checkbox" style="width: 25%;">
               <input type="checkbox" id="endesuche_checkbox" style="width: 25%;">
-              <br>
-              <label for="myCheck">Sind Buchstaben und länge bekannt (egal wo):</label>
-              <input type="checkbox" id="egalwo_checkbox" style="width: auto;"><br>
-              <br><label for="myCheck">Buchstaben ignorieren:</label>
-              <input type="checkbox" id="buchstaben_checkbox" style="width: auto;">
             </description>
             <div class="logollist">
               Gefunden: <br>
