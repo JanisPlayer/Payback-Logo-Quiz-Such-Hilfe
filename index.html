@@ -175,23 +175,35 @@
     const getloyaltypartner = JSON.parse(jf.response).partners;
 
     document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("payback_suche_input_zahlen").value = "4";
-      document.getElementById("payback_suche_input_buchstaben").value = "otto";
+      // document.getElementById("payback_suche_input_zahlen").value = "4";
+      // document.getElementById("payback_suche_input_buchstaben").value = "otto";
       document.getElementById('payback_suche_summit').addEventListener('click', selectOption);
       document.getElementById('payback_suche_input_buchstaben').addEventListener('keypress', liveselectOption);
     });
 
     function selectOption() {
       if (buchstaben_checkbox.checked == true) {
-        listload(0, 0, 1, 0);
+        if (Länge_checkbox.checked == true) {
+          listload(0, 0, 0, 0);
+        } else {
+          listload(0, 0, 1, 0);
+        }
       } else {
-        listload(0, 0, 1, 1);
+        if (Länge_checkbox.checked == true) {
+          listload(0, 0, 0, 1);
+        } else {
+          listload(0, 0, 1, 1);
+        }
       }
     }
 
     function liveselectOption() {
       if (livesuche_checkbox.checked == true) {
-        listload(0, 1, 1, 1);
+        if (Länge_checkbox.checked == true) {
+          listload(0, 1, 0, 1);
+        } else {
+          listload(0, 1, 1, 1);
+        }
       }
     }
 
@@ -202,7 +214,25 @@
 
       var buchstaben = document.getElementById("payback_suche_input_buchstaben").value;
       //alert(buchstaben.substr(0, 1));
-      var länge = document.getElementById("payback_suche_input_zahlen").value;
+      var länge = 0;
+      if (length == true) {
+        länge = document.getElementById("payback_suche_input_zahlen").value;
+      } else {
+        länge = buchstaben.length;
+      }
+
+      var minlänge = länge;
+      var maxlänge = länge;
+
+      if (MaxLänge_checkbox.checked == true) {
+        //maxlänge = document.getElementById("payback_suche_input_maxzahlen").value;
+        maxlänge = document.getElementById("payback_suche_input_zahlen").value;
+        minlänge = buchstaben.length;
+      }
+
+      if (MinLänge_checkbox.checked == true) {
+        minlänge = document.getElementById("payback_suche_input_minzahlen").value;
+      }
 
       const logo = 0;
       var sortpos = 0;
@@ -213,24 +243,24 @@
         //if (getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName.length == länge) {
         //  let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName;
         let tempname = getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim();
-        if (length == 0 || getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim().length == länge) {
+        if (length == 0 || (getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim().length <= maxlänge && getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim().length >= minlänge)) {
           let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim();
 
 
-          var schnitt = temp.length/2;
+          var schnitt = temp.length / 2;
           //punkte = schnitt;
           if (anfangsuche_checkbox.checked == true) {
-            temp = temp.substr(schnitt,schnitt);
+            temp = temp.substr(schnitt, schnitt);
             document.getElementById("livelogollist").innerHTML = temp;
           }
           if (mittesuche_checkbox.checked == true) {
-            temp = temp.substr(0,schnitt);
+            temp = temp.substr(0, schnitt);
             //punkte = punkte=schnitt*2;
             document.getElementById("livelogollist").innerHTML = temp;
           }
 
           if (endesuche_checkbox.checked == true) {
-            temp = temp.substr(schnitt,temp.length);
+            temp = temp.substr(schnitt, temp.length);
             document.getElementById("livelogollist").innerHTML = temp;
           }
 
@@ -238,7 +268,7 @@
           var lastpunkte = 0;
 
           if (buchstabentrue == 0) {
-                createLogoList(i, getloyaltypartner, punkte, mode);
+            createLogoList(i, getloyaltypartner, punkte, mode);
           } else {
             //for (var ai = 0; ai < temp.length; ai++) {
             for (var ai = 0; ai < buchstaben.length; ai++) {
@@ -252,12 +282,12 @@
               }
             }
             //dlrrläaspvyyrsyrpvzvm 6 tsepvüverbrnßfröealtwtsepvüverbrnßfröealtw 10
-            if (punkte >= länge || ((punkte >= buchstaben.length) && egalwo_checkbox.checked)) { //egal wo positon.
+            if (punkte >= minlänge || ((punkte >= buchstaben.length) && egalwo_checkbox.checked)) { //egal wo positon.
               //if (punkte >= länge) {
               logo[sortpos] = punkte;
               if (livesearch == true) {
                 if (punkte >= lastpunkte) {
-                  if (NameFund >= länge) { //Fehler (NameFund == 1)
+                  if (NameFund >= minlänge) { //Fehler (NameFund == 1)
                     document.getElementById("livelogollist").innerHTML = tempname;
                   } else {
                     document.getElementById("livelogollist").innerHTML = document.getElementById("livelogollist").innerHTML + " " + tempname;
@@ -448,11 +478,29 @@
         }
         // Auf neue Auswahl reagieren und gegebenenfalls Funktion dateiauswahl neu ausführen.
 
+        function toggle(el) {
+          //el= document.getElementsByTagName("description");
+          el = document.getElementById(el);
+          el.style.display = el.style.display != 'none' ? 'none' : '';
+        }
+        //for (let e of document.querySelectorAll ("input")) { e.style.color="green"; }
+        //for (let e of document.getElementsByTagName(" input")) { e.style.display = "none"; }
         document.addEventListener("DOMContentLoaded", () => {
           document.getElementById('myFile').addEventListener('change', dateiauswahl, false);
+          document.getElementById('payback_suche_help_summit').addEventListener('click', toggleall, false);
+          document.getElementById('MinLänge_checkbox').addEventListener('click', togglemintxt, false);
+
+          function toggleall() {
+            toggle("help1");
+            toggle("help2");
+            toggle("help3");
+          }
+
+          function togglemintxt() {
+            toggle("payback_suche_input_minzahlen");
+          }
         });
       </script>
-
       <div class="default_text">
         <box>
           <h1>Etwas Hilfe muss sein.<br> </h1>
@@ -462,7 +510,6 @@
       <div class="nav">
         <div id="server_box_left" style="display: inline-block; color: rgba(255, 255, 255, 1.0); text-align: center;">
           <!-- <box> -->
-
           <div id="such_hilfe" style="display: inline-block; background-color: rgba(0, 0, 255, 0.5); margin-top: 10px;">
             <!-- <box> -->
             <description>
@@ -478,19 +525,52 @@
             </div>
             <input type="text" value="" placeholder="Buchstaben" id="payback_suche_input_buchstaben" class="payback_suche_input_buchstaben">
             <input type="text" value="" placeholder="Länge" id="payback_suche_input_zahlen" class="payback_suche_input_zahlen">
-            <button id="payback_suche_summit" class="">suchen</button>
+            <button id="payback_suche_summit">suchen</button>
 
 
             <description>
               Sonstige Optionen:
-              <br><label for="myCheck">Livesuche(Treffer Vorschau) länge muss bekannt sein:</label>
+              <button id="payback_suche_help_summit" style="width: 80px;">Hilfe?</button>
+              <br><label for="myCheck">Livesuche(Treffer Vorschau) Länge muss bekannt sein (PC Only in arbeit):</label>
               <input type="checkbox" id="livesuche_checkbox" style="width: auto;">
-              <br><label for="myCheck">Buchstaben ignorieren:</label>
+              <br><br>
+              <div id="help1" style="display: none;">
+                <description>
+                  Dieser Modus zeigt alle Logos mit der gesuchten Länge an.
+                </description>
+              </div>
+              <label for="myCheck">Buchstaben ignorieren:</label>
               <input type="checkbox" id="buchstaben_checkbox" style="width: auto;">
-              <br>
-              <label for="myCheck">Sind Buchstaben und länge bekannt (egal wo):</label>
-              <input type="checkbox" id="egalwo_checkbox" style="width: auto;"><br>
-              <br><label for="myCheck">Ist eine Positon ist bekannt? (in arbeit dont work)</label>
+              <br><br>
+              <div id="help2" style="display: none;">
+                <description>
+                  Dieser Modus ist nützlich, falls man ein Logo mit xxx am Anfang hat, wie bei dem Logo XXXLSHOP, aber man die Länge nur ungefähr kennt. <br>
+                  Dann einfach bei Checkboxen (Maximal Länge festlegen) setzen und eine maximale Länge bei Länge oben eintragen und xxx bei Buchstaben eingeben.<br>
+                  <br>
+                  Ist die maximale Länge überhaut nicht bekannt. <br>
+                  Dann einfach bei Checkboxen (Länge ignorieren) setzen und xxx bei Buchstaben eingeben.<br>
+                  <br>
+                  Die Minimale Länge wird eigentlich nicht benötigt im egal wo Modus, da automatisch die bekannten Buchstaben als Minimalwert genutzt werden. <br>
+                  <br>
+                  Ist die Länge bekannt, muss die Checkbox (Länge ignorieren und Maximal Länge festlegen) nicht gesetzt werden und die Länge 8 kann eingetragen werden. <br>
+                </description>
+              </div>
+              <label for="myCheck">Sind einige Buchstaben und Länge bekannt (egal wo):</label>
+              <input type="checkbox" id="egalwo_checkbox" style="width: auto;"> <br>
+              <label for="myCheck">Maximal Länge festlegen:</label>
+              <input type="checkbox" id="MaxLänge_checkbox" style="width: auto;"> <br>
+              <!-- <input type="text" value="" placeholder="Maximale Länge" id="payback_suche_input_maxzahlen" class="payback_suche_input_maxzahlen">  <br>-->
+              <label for="myCheck">Minimale Länge festlegen:</label>
+              <input type="checkbox" id="MinLänge_checkbox" style="width: auto;"> <br>
+              <input type="text" value="" placeholder="Minimale Länge" id="payback_suche_input_minzahlen" class="payback_suche_input_minzahlen" style="display: none; width: 100%;">
+              <label for="myCheck">Länge ignorieren:</label>
+              <input type="checkbox" id="Länge_checkbox" style="width: auto;"> <br>
+              <div id="help3" style="display: none;">
+                <description>
+                  Dieser Modus bestimmt in welchem Teil des Logos gesucht wird, Anfang | Mitte | Ende.
+                </description>
+              </div>
+              <br><label for="myCheck">Ist eine Positon bekannt? (in arbeit dont work)</label>
               <br>
               <input type="checkbox" id="anfangsuche_checkbox" style="width: 25%;">
               <input type="checkbox" id="mittesuche_checkbox" style="width: 25%;">
