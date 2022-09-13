@@ -209,6 +209,51 @@
         minlänge = document.getElementById("payback_suche_input_minzahlen").value;
       }
 
+      const umlautMap = {
+        '\u00dc': 'UE',
+        '\u00c4': 'AE',
+        '\u00d6': 'OE',
+        '\u00fc': 'ue',
+        '\u00e4': 'ae',
+        '\u00f6': 'oe',
+        '\u00df': 'ss',
+      }
+
+      function replaceUmlaute(str) {
+
+        return str
+          .replace(/[\u00dc|\u00c4|\u00d6][a-z]/g, (a) => {
+            const big = umlautMap[a.slice(0, 1)];
+            return big.charAt(0) + big.charAt(1).toLowerCase() + a.slice(1);
+          })
+          .replace(new RegExp('[' + Object.keys(umlautMap).join('|') + ']', "g"),
+            (a) => umlautMap[a]
+          );
+      }
+
+      function replaceUmlautelength(buchstaben) {
+        let temp = buchstaben.toUpperCase();
+        let filter = "üöäß";
+        var Punkte = 0;
+        for (var ai = 0; ai < filter.length; ai++) {
+          for (var i = 0; i < buchstaben.length; i++) {
+            //var filter_var = temp.toUpperCase().indexOf(filter.toUpperCase());
+            var filter_var = temp.toUpperCase().indexOf(filter.substr(ai, 1).toUpperCase());
+            if (filter_var > -1) {
+              temp = temp.replace(filter.substr(ai, 1).toUpperCase(), "")
+              Punkte = Punkte + 1;
+            }
+          }
+        }
+        return Punkte;
+      }
+
+      var replaceUmlautevalue = parseInt(replaceUmlautelength(buchstaben));
+      if (replaceUmlautevalue != false) {
+        maxlänge = parseInt(maxlänge) + replaceUmlautevalue;
+        buchstaben = replaceUmlaute(buchstaben);
+      }
+      
       const logo = 0;
       var sortpos = 0;
 
@@ -514,7 +559,7 @@
           <div id="such_hilfe" style="display: inline-block; background-color: rgba(0, 0, 255, 0.5); margin-top: 10px;">
             <!-- <box> -->
             <description>
-              Einfach Buchstaben und Länge eintragen:
+              Einfach alle nutzbaren Buchstaben und Länge eintragen (Beispiel Standart Modus: Buchstaben: dlrrläaspvyyrsyrpvzvm, Länge: 6):
             </description>
             <description>
               Screenshot auswählen um die nutzung auf dem Smartphone zu erleichtern.
@@ -558,7 +603,7 @@
                     Ist die Länge bekannt, muss die Checkbox (Länge ignorieren und Maximal Länge festlegen) nicht gesetzt werden und die Länge 8 kann eingetragen werden. <br>
                   </description>
                 </div>
-                <label for="myCheck">Sind einige Buchstaben und Länge bekannt (egal wo):</label>
+                <label for="myCheck">Sind einige Buchstaben (des Logos) und Länge bekannt (egal wo):</label>
                 <input type="checkbox" id="egalwo_checkbox" style="width: auto;"> <br>
                 <label for="myCheck">Maximal Länge festlegen:</label>
                 <input type="checkbox" id="MaxLänge_checkbox" style="width: auto;"> <br>
@@ -588,29 +633,74 @@
           <!-- </box> -->
         </div>
 
+        <script>
+          var ads = [
+            '<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B07FCMKK5X&asins=B07FCMKK5X&linkId=f563fc0fd132305d0a6d7e1a2cb6e31c&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff"></iframe>',
+            '<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B08GYKNCCP&asins=B08GYKNCCP&linkId=0173a9cbda143dabd7158581f6086d08&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff"></iframe>',
+            '<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08GVDNTGJ&asins=B08GVDNTGJ&linkId=69d02f5ddd18df8dea428ab3101e1b6d&show_border=false&link_opens_in_new_window=true"></iframe>',
+            '<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08QJHLC8J&asins=B08QJHLC8J&linkId=94c939aef19537e6362cdd2ccdb185e8&show_border=false&link_opens_in_new_window=true"></iframe>',
+            '<iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B0924W1CV5&asins=B0924W1CV5&linkId=62ed2c94241ddbe099bcfe2ae3e1ec59&show_border=false&link_opens_in_new_window=true"></iframe>',
+            7,
+            9,
+            10,
+            11,
+            13,
+            14, 15, 16, 19, 20, 21, 22, 23, 26, 27, 28
+          ];
+          var gen_nums = [];
+
+          function in_array(array, el) {
+            for (var i = 0; i < array.length; i++)
+              if (array[i] == el) return true;
+            return false;
+          }
+
+          function get_rand(array) {
+            var rand = array[Math.floor(Math.random() * array.length)];
+            if (!in_array(gen_nums, rand)) {
+              gen_nums.push(rand);
+              return rand;
+            }
+            return get_rand(array);
+          }
+
+          function better_amazon_ads() {
+
+          }
+        </script>
+
         <div class="werbung">
-          <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B07FCMKK5X&asins=B07FCMKK5X&linkId=f563fc0fd132305d0a6d7e1a2cb6e31c&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
-          </iframe>
-          <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B08GYKNCCP&asins=B08GYKNCCP&linkId=0173a9cbda143dabd7158581f6086d08&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
-          </iframe>
-          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08GVDNTGJ&asins=B08GVDNTGJ&linkId=69d02f5ddd18df8dea428ab3101e1b6d&show_border=false&link_opens_in_new_window=true"></iframe>
-          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08QJHLC8J&asins=B08QJHLC8J&linkId=94c939aef19537e6362cdd2ccdb185e8&show_border=false&link_opens_in_new_window=true"></iframe>
-          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B0924W1CV5&asins=B0924W1CV5&linkId=62ed2c94241ddbe099bcfe2ae3e1ec59&show_border=false&link_opens_in_new_window=true"></iframe>
-          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B09QWH3T52&asins=B09QWH3T52&linkId=d241274730ec06da2426bd407ebc4c1e&show_border=false&link_opens_in_new_window=true"></iframe>
-          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B01C0EF2OC&asins=B01C0EF2OC&linkId=c055524d5299430ffd5d07a4591c4ae1&show_border=false&link_opens_in_new_window=true"></iframe>
-          <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07PHPXHQS&asins=B07PHPXHQS&linkId=891fbb8ae7beace0e315105660387054&show_border=false&link_opens_in_new_window=true"></iframe>
-          <iframe src="https://rcm-eu.amazon-adsystem.com/e/cm?o=3&p=12&l=ur1&category=pw&banner=1RWHE2Q7M2AQ18P32H02&f=ifr&linkID=be6e19476942c4c3af4a16c8ca9bf731&t=heldendesb0c1-21&tracking_id=heldendesb0c1-21" width="300" height="250"
-            scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
-          <br><br>
-          Als Amazon-Partner verdiene ich an qualifizierten Verkäufen
+          <box>
+            <div id="better_amazon_ads_list">
+
+            </div>
+            <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B07FCMKK5X&asins=B07FCMKK5X&linkId=f563fc0fd132305d0a6d7e1a2cb6e31c&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff"></iframe>
+            <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B08GYKNCCP&asins=B08GYKNCCP&linkId=0173a9cbda143dabd7158581f6086d08&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff"></iframe>
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08GVDNTGJ&asins=B08GVDNTGJ&linkId=69d02f5ddd18df8dea428ab3101e1b6d&show_border=false&link_opens_in_new_window=true"></iframe>
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08QJHLC8J&asins=B08QJHLC8J&linkId=94c939aef19537e6362cdd2ccdb185e8&show_border=false&link_opens_in_new_window=true"></iframe>
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B0924W1CV5&asins=B0924W1CV5&linkId=62ed2c94241ddbe099bcfe2ae3e1ec59&show_border=false&link_opens_in_new_window=true"></iframe>
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B09QWH3T52&asins=B09QWH3T52&linkId=d241274730ec06da2426bd407ebc4c1e&show_border=false&link_opens_in_new_window=true"></iframe>
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B01C0EF2OC&asins=B01C0EF2OC&linkId=c055524d5299430ffd5d07a4591c4ae1&show_border=false&link_opens_in_new_window=true"></iframe>
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07PHPXHQS&asins=B07PHPXHQS&linkId=891fbb8ae7beace0e315105660387054&show_border=false&link_opens_in_new_window=true"></iframe>
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B0046GG1XY&asins=B0046GG1XY&linkId=4e8059d13b4351cbd6e328a058235f7d&show_border=false&link_opens_in_new_window=true"></iframe>
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07NZZZ746&asins=B07NZZZ746&linkId=5b8cb3878b4d179c1424bc0789997bdf&show_border=false&link_opens_in_new_window=true"></iframe>
+            <iframe src="https://rcm-eu.amazon-adsystem.com/e/cm?o=3&p=12&l=ur1&category=pw&banner=1RWHE2Q7M2AQ18P32H02&f=ifr&linkID=be6e19476942c4c3af4a16c8ca9bf731&t=heldendesb0c1-21&tracking_id=heldendesb0c1-21" width="300" height="250"
+              scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
+            <iframe src="https://rcm-eu.amazon-adsystem.com/e/cm?o=3&p=20&l=ur1&category=prime_video&banner=08WJ67E41CC04W6R9S02&f=ifr&linkID=10db44646b15f2ff0ce4c27b42c716f1&t=heldendesb0c1-21&tracking_id=heldendesb0c1-21" width="120" height="90"
+              scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
+            <br><br>
+            Als Amazon-Partner verdiene ich an qualifizierten Verkäufen
+          </box>
         </div>
 
         <div id="blog">
