@@ -209,17 +209,16 @@
         minlänge = document.getElementById("payback_suche_input_minzahlen").value;
       }
 
-      const umlautMap = {
-        '\u00dc': 'UE',
-        '\u00c4': 'AE',
-        '\u00d6': 'OE',
-        '\u00fc': 'ue',
-        '\u00e4': 'ae',
-        '\u00f6': 'oe',
-        '\u00df': 'ss',
-      }
-
       function replaceUmlaute(str) {
+        const umlautMap = {
+          '\u00dc': 'UE',
+          '\u00c4': 'AE',
+          '\u00d6': 'OE',
+          '\u00fc': 'ue',
+          '\u00e4': 'ae',
+          '\u00f6': 'oe',
+          '\u00df': 'ss',
+        }
 
         return str
           .replace(/[\u00dc|\u00c4|\u00d6][a-z]/g, (a) => {
@@ -229,6 +228,47 @@
           .replace(new RegExp('[' + Object.keys(umlautMap).join('|') + ']', "g"),
             (a) => umlautMap[a]
           );
+      }
+
+      /*function replacetoUmlaute(str) { //Wait wieso mache ich das Rad neu.
+        const umlautMap = {
+          'UE': '\u00dc',
+          'AE': '\u00c4',
+          'OE': '\u00d6',
+          'ue': '\u00fc',
+          'ae': '\u00e4',
+          'oe': '\u00f6',
+          'ss': '\u00df',
+        }
+
+        return str
+          .replace(/[UE|AE|OE][a-z]/g, (a) => {
+            const big = umlautMap[a.slice(0, 1)];
+            return big.charAt(0) + big.charAt(1).toLowerCase() + a.slice(1);
+          })
+          .replace(new RegExp('[' + Object.keys(umlautMap).join('|') + ']', "g"),
+            (a) => umlautMap[a]
+          );
+      }*/
+
+      function replacetoUmlaute(str) {
+        var mapObj = {
+            "ae": "ä",
+            "oe": "ö",
+            "ue": "ü",
+            "ss": "ß",
+            "ä": "ae",
+            "ö": "oe",
+            "ü": "ue",
+            "ß": "ss"
+          },
+          reg1 = /ä|ö|ü|ß/gi,
+          reg2 = /ae|oe|ue|ss/gi;
+
+        var reg = /ä|ö|ü|ß/i.test(str) ? reg1 : reg2;
+        return str.replace(reg, function(matched, offset, s) {
+          return mapObj[matched];
+        });
       }
 
       function replaceUmlautelength(buchstaben) {
@@ -248,14 +288,14 @@
         return Punkte;
       }
 
-      var replaceUmlautevalue = parseInt(replaceUmlautelength(buchstaben));
+      /*var replaceUmlautevalue = parseInt(replaceUmlautelength(buchstaben));
 
       if (replaceUmlaute_checkbox.checked == true) {
         if (replaceUmlautevalue != false) {
           maxlänge = parseInt(maxlänge) + replaceUmlautevalue;
           buchstaben = replaceUmlaute(buchstaben);
         }
-      }
+      }*/
 
       const logo = 0;
       var sortpos = 0;
@@ -265,9 +305,20 @@
       for (var i = 0; i < Object.keys(getloyaltypartner).length; i++) {
         //if (getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName.length == länge) {
         //  let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName;
-        let tempname = getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim();
-        if (length == 0 || (getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim().length <= maxlänge && getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim().length >= minlänge)) {
-          let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim();
+
+        let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim();
+
+        if (replaceUmlaute_checkbox.checked == true) {
+          var replaceUmlautevalue = parseInt(replaceUmlautelength(buchstaben));
+          if (replaceUmlautevalue != false) {
+            temp = replacetoUmlaute(temp);
+          }
+        }
+
+        //let tempname = getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim();
+        let tempname = temp;
+
+        if (length == 0 || (temp.length <= maxlänge && temp.length >= minlänge)) {
 
 
           var schnitt = temp.length / 2;
