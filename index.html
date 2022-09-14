@@ -138,8 +138,8 @@
     const getloyaltypartner = JSON.parse(jf.response).partners;
 
     document.addEventListener("DOMContentLoaded", () => {
-      // document.getElementById("payback_suche_input_zahlen").value = "4";
-      // document.getElementById("payback_suche_input_buchstaben").value = "otto";
+      document.getElementById("payback_suche_input_zahlen").value = "11";
+      document.getElementById("payback_suche_input_buchstaben").value = "Vreerelywmllnnukkiümc";
       document.getElementById('payback_suche_summit').addEventListener('click', selectOption);
       document.getElementById('payback_suche_input_buchstaben').addEventListener('keypress', liveselectOption);
     });
@@ -306,7 +306,7 @@
         //if (getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName.length == länge) {
         //  let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName;
 
-        let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim();
+        let temp = getloyaltypartner[(Object.keys(getloyaltypartner)[i])][(modeselectet[mode])].trim().replace(/ /g, '');
 
         if (replaceUmlaute_checkbox.checked == true) {
           var replaceUmlautevalue = parseInt(replaceUmlautelength(buchstaben));
@@ -320,6 +320,9 @@
 
         if (length == 0 || (temp.length <= maxlänge && temp.length >= minlänge)) {
 
+          // if (temp.toUpperCase.includes("ERWINMUELLER") == true) {
+          //   alert(temp);
+          // };
 
           var schnitt = temp.length / 2;
           //punkte = schnitt;
@@ -348,11 +351,11 @@
             for (var ai = 0; ai < buchstaben.length; ai++) {
               //if (getloyaltypartner[(Object.keys(getloyaltypartner)[i])].vanityName.includes(buchstaben.substr(ai, 1))) {
               if (temp.toUpperCase().indexOf(buchstaben.substr(ai, 1).toUpperCase()) > -1) {
-                //if (temp.toUpperCase().includes(buchstaben.substr(ai, 1)).toUpperCase()) {
+                //if (temp.toUpperCase().includes(buchstaben.substr(ai, 1).toUpperCase())) {
                 temp = temp.replace(buchstaben.substr(ai, 1), "")
                 //logo[ai] = i;
                 punkte = punkte + 1;
-                NameFund = NameFund + 1;
+                //NameFund = NameFund + 1; Blädsinn
               }
             }
             //dlrrläaspvyyrsyrpvzvm 6 tsepvüverbrnßfröealtwtsepvüverbrnßfröealtw 10
@@ -361,6 +364,7 @@
               logo[sortpos] = punkte;
               if (livesearch == true) {
                 if (punkte >= lastpunkte) {
+                  NameFund = NameFund + 1;
                   if (NameFund >= minlänge) { //Fehler (NameFund == 1)
                     document.getElementById("livelogollist").innerHTML = tempname;
                   } else {
@@ -368,13 +372,14 @@
                   }
                 }
               } else {
+                NameFund = NameFund + 1;
                 createLogoList(i, getloyaltypartner, punkte, mode);
               }
             }
           }
         }
       }
-
+      // alert(NameFund);
       if (NameFund == 0 && mode == 0) {
         listload(1, livesearch, length, buchstabentrue);
       }
