@@ -249,11 +249,14 @@
       }
 
       var replaceUmlautevalue = parseInt(replaceUmlautelength(buchstaben));
-      if (replaceUmlautevalue != false) {
-        maxlänge = parseInt(maxlänge) + replaceUmlautevalue;
-        buchstaben = replaceUmlaute(buchstaben);
+
+      if (replaceUmlaute_checkbox.checked == true) {
+        if (replaceUmlautevalue != false) {
+          maxlänge = parseInt(maxlänge) + replaceUmlautevalue;
+          buchstaben = replaceUmlaute(buchstaben);
+        }
       }
-      
+
       const logo = 0;
       var sortpos = 0;
 
@@ -613,6 +616,8 @@
                 <input type="number" value="" placeholder="Minimale Länge" id="payback_suche_input_minzahlen_eingabe" class="payback_suche_input_minzahlen_eingabe" style="display: none; width: 100%;">
                 <label for="myCheck">Länge ignorieren:</label>
                 <input type="checkbox" id="Länge_checkbox" style="width: auto;"> <br>
+                <label for="myCheck">Suchmodus für Umlaute, kann Logos mit üöäß finden, aber macht die Suche ungenauer.</label>
+                <input type="checkbox" id="replaceUmlaute_checkbox" style="width: auto;"> <br>
                 <div id="help3" style="display: none;">
                   <description>
                     Dieser Modus bestimmt in welchem Teil des Logos gesucht wird, Anfang | Mitte | Ende.
