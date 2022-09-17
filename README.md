@@ -11,7 +11,7 @@ Mögliche Veränderungen:
 Erstellen einer Liste mit richtigen Ergebnissen. ❌  
 Löschen falscher Ergebnisse. ❌  
 Modus mit variabler Länge (min und max oder Länge nicht berücksichtigen) oder variablen Buchstaben (Nur Länge berücksichtigen), um mögliche Treffer zu finden, falls nichts gefunden wird. ☑️  
-Erste Mittlere am Ende bekannte Buchstaben Modus mit Länge und ohne. ❌  
+Erste Mittlere am Ende bekannte Buchstaben Modus mit Länge und ohne. ☑️  
 Suche direkt bei der eingab der Buchstaben mit Länge und ohne. (Sollte wenn optional sein, erhöht die Auslastung) ❌  
 Bildanalyse Serverseitig von Text und Lücken oder Bild. (Weil aufwendig und mit Spenden möglich.) ❌  
 
