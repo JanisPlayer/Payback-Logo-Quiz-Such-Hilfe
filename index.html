@@ -324,22 +324,41 @@
           //   alert(temp);
           // };
 
-          var schnitt = temp.length / 2;
+          var schnitt = parseInt(temp.length / 3);
           //punkte = schnitt;
-          if (anfangsuche_checkbox.checked == true) {
-            temp = temp.substr(schnitt, schnitt);
-            document.getElementById("livelogollist").innerHTML = temp;
-          }
-          if (mittesuche_checkbox.checked == true) {
-            temp = temp.substr(0, schnitt);
-            //punkte = punkte=schnitt*2;
-            document.getElementById("livelogollist").innerHTML = temp;
+
+          if (!(anfangsuche_checkbox.checked == true && mittesuche_checkbox.checked == true && endesuche_checkbox.checked == true)) {
+          if (anfangsuche_checkbox.checked == true && endesuche_checkbox.checked == true) {
+            let temp2 = temp.substr(0, schnitt);
+            let temp3 = temp.substr(schnitt, temp.length);
+            temp = temp2 + temp3;
+          } else {
+            if (anfangsuche_checkbox.checked == true && mittesuche_checkbox.checked == false) {
+              temp = temp.substr(0, schnitt);
+              //document.getElementById("livelogollist").innerHTML = temp;
+            }
+
+            if (endesuche_checkbox.checked == true && mittesuche_checkbox.checked == false) {
+              temp = temp.substr(schnitt, temp.length);
+              //document.getElementById("livelogollist").innerHTML = temp;
+            }
           }
 
-          if (endesuche_checkbox.checked == true) {
-            temp = temp.substr(schnitt, temp.length);
-            document.getElementById("livelogollist").innerHTML = temp;
+          if (mittesuche_checkbox.checked == true) {
+            if (anfangsuche_checkbox.checked == false && endesuche_checkbox.checked == false) {
+              temp = temp.substr(Math.round(schnitt / 2), Math.round(schnitt * 2));
+            } else {
+              if (anfangsuche_checkbox.checked == true && endesuche_checkbox.checked == false) {
+                temp = temp.substr(0, Math.round(schnitt * 2));
+              }
+              if (anfangsuche_checkbox.checked == false && endesuche_checkbox.checked == true) {
+                temp = temp.substr(Math.round(schnitt / 2), temp.length);
+              }
+            }
+            //punkte = punkte=schnitt*2;
+            //ocument.getElementById("livelogollist").innerHTML = temp;
           }
+        }
 
           var punkte = 0;
           var lastpunkte = 0;
@@ -610,6 +629,7 @@
           document.getElementById('payback_suche_input_maxzahlen').addEventListener('change', changemaxtxt, false);
           document.getElementById('payback_suche_input_minzahlen_eingabe').addEventListener('change', changemintxt, false);
           document.getElementById('payback_suche_settings_summit').addEventListener('click', togglesettings, false);
+          document.getElementById('egalwo_checkbox').addEventListener('click', togglepossuche, false);
 
           function toggleall() {
             toggle("help1");
@@ -641,6 +661,10 @@
 
           function togglesettings() {
             toggle("settings");
+          }
+
+          function togglepossuche() {
+            toggle("possuche");
           }
         });
       </script>
@@ -712,6 +736,18 @@
                 </div>
                 <label for="myCheck">Sind einige Buchstaben (des Logos) und Länge bekannt (egal wo):</label>
                 <input type="checkbox" id="egalwo_checkbox" style="width: auto;"> <br>
+                <div id="possuche" style="display: none;">
+                  <div id="help3" style="display: none;">
+                    <description>
+                      Dieser Modus bestimmt in welchem Teil des Logos gesucht wird, Anfang | Mitte | Ende.
+                    </description>
+                  </div>
+                  <br><label for="myCheck">Ist eine Positon bekannt? (Nicht ankreuzen wenn überall gesucht werden soll.)</label>
+                  <br>
+                  <input type="checkbox" id="anfangsuche_checkbox" style="width: 25%;">
+                  <input type="checkbox" id="mittesuche_checkbox" style="width: 25%;">
+                  <input type="checkbox" id="endesuche_checkbox" style="width: 25%;">
+                </div>
                 <label for="myCheck">Maximal Länge festlegen:</label>
                 <input type="checkbox" id="MaxLänge_checkbox" style="width: auto;"> <br>
                 <input type="number" value="" placeholder="Maximale Länge" id="payback_suche_input_maxzahlen" class="payback_suche_input_maxzahlen" style="display: none; width: 100%;">
@@ -722,16 +758,6 @@
                 <input type="checkbox" id="Länge_checkbox" style="width: auto;"> <br>
                 <label for="myCheck">Suchmodus für Umlaute, kann Logos mit üöäß finden, aber macht die Suche ungenauer.</label>
                 <input type="checkbox" id="replaceUmlaute_checkbox" style="width: auto;"> <br>
-                <div id="help3" style="display: none;">
-                  <description>
-                    Dieser Modus bestimmt in welchem Teil des Logos gesucht wird, Anfang | Mitte | Ende.
-                  </description>
-                </div>
-                <br><label for="myCheck">Ist eine Positon bekannt? (in arbeit dont work)</label>
-                <br>
-                <input type="checkbox" id="anfangsuche_checkbox" style="width: 25%;">
-                <input type="checkbox" id="mittesuche_checkbox" style="width: 25%;">
-                <input type="checkbox" id="endesuche_checkbox" style="width: 25%;">
               </description>
             </div>
             <div class="logollist">
