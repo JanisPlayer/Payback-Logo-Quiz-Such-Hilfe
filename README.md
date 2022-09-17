@@ -8,9 +8,14 @@ Groß und Kleinschreibung ist nicht mehr wichtig.
 Leerzeichen werden entfernt wegen displayName vor jeder suche egal welcher mode.  
 
 Mögliche Veränderungen:  
-Erstellen einer Liste mit richtigen Ergebnissen.  
-Löschen falscher Ergebnisse.  
-Modus mit variabler Länge (min und max oder Länge nicht berücksichtigen) oder variablen Buchstaben (Nur Länge berücksichtigen), um mögliche Treffer zu finden, falls nichts gefunden wird.  
-Erste Mittlere am Ende bekannte Buchstaben Modus mit Länge und ohne.  
-Suche direkt bei der eingab der Buchstaben mit Länge und ohne. (Sollte wenn optional sein, erhöht die Auslastung)  
-Bildanalyse Serverseitig von Text und Lücken oder Bild. (Weil aufwendig und mit Spenden möglich.)  
+Erstellen einer Liste mit richtigen Ergebnissen. ❌  
+Löschen falscher Ergebnisse. ❌  
+Modus mit variabler Länge (min und max oder Länge nicht berücksichtigen) oder variablen Buchstaben (Nur Länge berücksichtigen), um mögliche Treffer zu finden, falls nichts gefunden wird. ☑️  
+Erste Mittlere am Ende bekannte Buchstaben Modus mit Länge und ohne. ❌  
+Suche direkt bei der eingab der Buchstaben mit Länge und ohne. (Sollte wenn optional sein, erhöht die Auslastung) ❌  
+Bildanalyse Serverseitig von Text und Lücken oder Bild. (Weil aufwendig und mit Spenden möglich.) ❌  
+
+Nötige Verbesserung:  
+Umlaute Modus 2 muss gestartet werden, wenn mehr Treffer hier gefunden werden und dann als weitere Treffer angezeigt werden. ☑️  
+Oder vielleicht auch direkt bei der ersten Suche aktiviert wird, wenn Umlaute enthalten sind.  
+Vielleicht könnte eine Suche der displayName das Problem lösen oder eine sofortige Umlaute suche. Aber das könnte dann auch wieder komische Treffer liefern.  
