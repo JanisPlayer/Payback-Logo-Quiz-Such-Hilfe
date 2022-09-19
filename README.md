@@ -19,3 +19,4 @@ Nötige Verbesserung:
 Umlaute Modus 2 muss gestartet werden, wenn mehr Treffer hier gefunden werden und dann als weitere Treffer angezeigt werden. ☑️  
 Oder vielleicht auch direkt bei der ersten Suche aktiviert wird, wenn Umlaute enthalten sind.  
 Vielleicht könnte eine Suche der displayName das Problem lösen oder eine sofortige Umlaute suche. Aber das könnte dann auch wieder komische Treffer liefern.  
+Modus 1-2 (vanityName & displayName) vereinen in dem man zwei temp variablen macht und diese abgleicht und dann das beste Ergebnis zeigt.  
