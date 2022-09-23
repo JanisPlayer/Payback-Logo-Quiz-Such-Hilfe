@@ -677,16 +677,71 @@
         <box>
           <h1>Etwas Hilfe muss sein.<br> </h1>
         </box>
+        <div class="adblockdetect">
+        </div>
         <box>
-          <div id="werbung_google_layerable">
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5350651163680266" crossorigin="anonymous"></script>
-            <!-- Adblocklayerable -->
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5350651163680266" data-ad-slot="5168793244" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+          <div class="ads showads">
+            <div id="werbung_google_layerable">
+              <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5350651163680266" crossorigin="anonymous"></script>
+              <!-- Adblocklayerable -->
+              <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5350651163680266" data-ad-slot="5168793244" data-ad-format="auto" data-full-width-responsive="true"></ins>
+              <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+                let adBlockEnabled = false;
+                async function detectAdBlock() {
+                  const googleAdUrl = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
+                  try {
+                    await fetch(new Request(googleAdUrl)).catch(_ => adBlockEnabled = true)
+                  } catch (e) {
+                    adBlockEnabled = true;
+                  } finally {
+                    console.log(`AdBlock Enabled: ${adBlockEnabled}`)
+                  }
+
+                  if (adBlockEnabled == true) {
+                    adBlockEnabled = true;
+                    return true;
+                  }
+
+                  setTimeout(function() {
+                    var a = document.querySelector('.showads'),
+                      adBlockEnabled = a ? (a.offsetHeight ? false : true) : true;
+                    console.log('ads blocked?', adBlockEnabled)
+                    if (adBlockEnabled == true) {
+                      adBlockEnabled = true;
+                      return true;
+                    }
+                  }, 200);
+
+                  setTimeout(function() {
+                    if (document.querySelector('.showads').offsetHeight <= 65 || document.querySelector('.adsbygoogle').offsetHeight <= 5 || adBlockEnabled == true) {
+                      console.log('ads blocked?', ' = true');
+                      adBlockEnabled = true;
+                      return true;
+                    }
+                  }, 200);
+
+                  return false;
+                }
+
+                detectAdBlock();
+                setTimeout(function() {
+                  if (adBlockEnabled == true) {
+                    const title = document.createElement("a");
+                    const content_box = document.getElementsByClassName("adblockdetect")[0];
+                    title.innerHTML =
+                      'Adblocker erkannt, ich werde die Dienstleistung nicht einschränken, will dich aber dennoch bieten diesen zu deaktivieren. <br> Wie habe ich dich erkannt, ja das ist einfach: <a href="https://heldendesbildschirms.de/artikel/?artikel=was-ist-eigentlich-der-sinn-von-anti-adblockern-wie-leicht-lassen-sie-sich-umgehen">Was ist eigentlich der Sinn von Anti-Adblockern / Wie leicht lassen sie sich umgehen </a> <br> Falls du Adblocker mit Whitelisting nutzt, solltest du zu uBlock Origin und Privacy Badger wechlen. ;)';
+                    content_box.appendChild(title);
+
+                  } else {
+                    //alert("adblocker nicht erkannt");
+                  }
+                }, 1000);
+              </script>
+            </div>
           </div>
-          <a href="https://forms.gle/fArRfcpy95PiTV25A">Umgfrage zur Werbeoptimierung</a>
+          <!-- <a href="https://forms.gle/fArRfcpy95PiTV25A">Umgfrage zur Werbeoptimierung</a> -->
         </box>
       </div>
 
@@ -816,29 +871,39 @@
 
             </div>
             <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07V6KD4ZY&asins=B07V6KD4ZY&linkId=09793a323ab1ff2f78c5e2ef59ee574c&show_border=false&link_opens_in_new_window=true"></iframe>
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B09BPG4LDD&asins=B09BPG4LDD&linkId=7b0e4191952ed4fb8075a1e3dc1f46b5&show_border=false&link_opens_in_new_window=true"></iframe>
+            <!-- <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+            src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07V6KD4ZY&asins=B07V6KD4ZY&linkId=09793a323ab1ff2f78c5e2ef59ee574c&show_border=false&link_opens_in_new_window=true"></iframe> -->
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B09QWH3T52&asins=B09QWH3T52&linkId=d241274730ec06da2426bd407ebc4c1e&show_border=false&link_opens_in_new_window=true"></iframe>
             <!-- <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
               src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B07FCMKK5X&asins=B07FCMKK5X&linkId=f563fc0fd132305d0a6d7e1a2cb6e31c&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff"></iframe> -->
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B00EWT1Y46&asins=B00EWT1Y46&linkId=b26fb252ed55df4850be39eb28836ce9&show_border=false&link_opens_in_new_window=true"></iframe>
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B01C0EF2OC&asins=B01C0EF2OC&linkId=c055524d5299430ffd5d07a4591c4ae1&show_border=false&link_opens_in_new_window=true"></iframe>
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B081CYKRJF&asins=B081CYKRJF&linkId=5e8167f5ef63957fb27951e993b91362&show_border=false&link_opens_in_new_window=true"></iframe>
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B00X81M4FW&asins=B00X81M4FW&linkId=c5e5975c56772b91271034008ae95d03&show_border=true&link_opens_in_new_window=true"></iframe>
             <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
               src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B084CW9L8R&asins=B084CW9L8R&linkId=7cadcfbecb7c1aad6daf11b1e638adc7&show_border=false&link_opens_in_new_window=true"></iframe>
             <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
               src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ac&ref=tf_til&ad_type=product_link&tracking_id=heldendesb0c1-21&marketplace=amazon&amp;region=DE&placement=B08GYKNCCP&asins=B08GYKNCCP&linkId=0173a9cbda143dabd7158581f6086d08&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff"></iframe>
             <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08GVDNTGJ&asins=B08GVDNTGJ&linkId=69d02f5ddd18df8dea428ab3101e1b6d&show_border=false&link_opens_in_new_window=true"></iframe>
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B09F4LLK1R&asins=B09F4LLK1R&linkId=a5a3f1610bc6b35b82ebb398b352a404&show_border=false&link_opens_in_new_window=true"></iframe>
+            <!-- <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08GVDNTGJ&asins=B08GVDNTGJ&linkId=69d02f5ddd18df8dea428ab3101e1b6d&show_border=false&link_opens_in_new_window=true"></iframe> -->
             <!-- <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
               src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B08QJHLC8J&asins=B08QJHLC8J&linkId=94c939aef19537e6362cdd2ccdb185e8&show_border=false&link_opens_in_new_window=true"></iframe> -->
             <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
               src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B0924W1CV5&asins=B0924W1CV5&linkId=62ed2c94241ddbe099bcfe2ae3e1ec59&show_border=false&link_opens_in_new_window=true"></iframe>
-            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B09QWH3T52&asins=B09QWH3T52&linkId=d241274730ec06da2426bd407ebc4c1e&show_border=false&link_opens_in_new_window=true"></iframe>
-            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B01C0EF2OC&asins=B01C0EF2OC&linkId=c055524d5299430ffd5d07a4591c4ae1&show_border=false&link_opens_in_new_window=true"></iframe>
-            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07PHPXHQS&asins=B07PHPXHQS&linkId=891fbb8ae7beace0e315105660387054&show_border=false&link_opens_in_new_window=true"></iframe>
-            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+            <!-- <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07PHPXHQS&asins=B07PHPXHQS&linkId=891fbb8ae7beace0e315105660387054&show_border=false&link_opens_in_new_window=true"></iframe> -->
+            <!-- <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
               src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B0046GG1XY&asins=B0046GG1XY&linkId=4e8059d13b4351cbd6e328a058235f7d&show_border=false&link_opens_in_new_window=true"></iframe>
             <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"
-              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07NZZZ746&asins=B07NZZZ746&linkId=5b8cb3878b4d179c1424bc0789997bdf&show_border=false&link_opens_in_new_window=true"></iframe>
+              src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=DE&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=heldendesb0c1-21&language=de_DE&marketplace=amazon&region=DE&placement=B07NZZZ746&asins=B07NZZZ746&linkId=5b8cb3878b4d179c1424bc0789997bdf&show_border=false&link_opens_in_new_window=true"></iframe> -->
             <iframe src="https://rcm-eu.amazon-adsystem.com/e/cm?o=3&p=12&l=ur1&category=pw&banner=1RWHE2Q7M2AQ18P32H02&f=ifr&linkID=be6e19476942c4c3af4a16c8ca9bf731&t=heldendesb0c1-21&tracking_id=heldendesb0c1-21" width="300" height="250"
               scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
             <iframe src="https://rcm-eu.amazon-adsystem.com/e/cm?o=3&p=20&l=ur1&category=prime_video&banner=08WJ67E41CC04W6R9S02&f=ifr&linkID=10db44646b15f2ff0ce4c27b42c716f1&t=heldendesb0c1-21&tracking_id=heldendesb0c1-21" width="120" height="90"
@@ -886,7 +951,6 @@
 </div>-->
 
         <div id="werbung_google">
-
           <!-- Adblock -->
           <ins class="adsbygoogle" style="display:block; text-align:center; margin-top: 1%;" data-ad-client="ca-pub-5350651163680266" data-ad-slot="9833970873" data-ad-format="auto" data-full-width-responsive="true"></ins>
           <script>
