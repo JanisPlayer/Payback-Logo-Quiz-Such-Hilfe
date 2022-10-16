@@ -578,7 +578,6 @@
         <input type="text" value="" id="suche_input" class="suche"><button id="suche_summit" class="suche">suchen</button>
       </div>
     </div>
-    </head>
 
     <content_box>
 
@@ -712,7 +711,7 @@
                       adBlockEnabled = true;
                       return true;
                     }
-                  }, 200);
+                  }, 1000);
 
                   setTimeout(function() {
                     if (document.querySelector('.showads').offsetHeight <= 65 || document.querySelector('.adsbygoogle').offsetHeight <= 5 || adBlockEnabled == true) {
@@ -720,7 +719,7 @@
                       adBlockEnabled = true;
                       return true;
                     }
-                  }, 200);
+                  }, 1000);
 
                   return false;
                 }
